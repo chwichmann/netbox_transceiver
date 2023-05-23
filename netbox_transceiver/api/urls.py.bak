@@ -1,0 +1,6 @@
+from netbox.api.routers import NetBoxRouter
+from .views import TransceiverViewSet
+
+router = NetBoxRouter()
+router.register('netbox_transceiver', TransceiverViewSet)
+urlpatterns = router.urls

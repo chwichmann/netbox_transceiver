@@ -1,0 +1,8 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/netbox_transceiver.egg-info
+/netbox_transceiver/api/__pycache__
+/netbox_transceiver/__pycache__

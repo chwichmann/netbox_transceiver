@@ -11,13 +11,13 @@ class TransceiverTypeTable(NetBoxTable):
         linkify=True
     )
     instance_count = columns.LinkedCountColumn(
-        viewname='dcim:transceiver_list',
+        viewname='plugins:netbox_transceiver:transceiver_list',
         url_params={'transceiver_type_id': 'pk'},
         verbose_name='Instances'
     )
     comments = columns.MarkdownColumn()
     tags = columns.TagColumn(
-        url_name='dcim:moduletype_list'
+        url_name='plugins:netbox_transceiver:transceiver_list'
     )
 
     class Meta(NetBoxTable.Meta):
@@ -46,7 +46,7 @@ class TransceiverTable(NetBoxTable):
     status = columns.ChoiceFieldColumn()
     comments = columns.MarkdownColumn()
     tags = columns.TagColumn(
-        url_name='dcim:transceiver_list'
+        #url_name='transceiver:transceiver_list'
     )
 
     class Meta(NetBoxTable.Meta):

@@ -1,5 +1,5 @@
 from netbox.views import generic
-from .models import Transceiver, TransceiverType
+from .models import *
 from . import forms, tables, filtersets
 from utilities.utils import count_related
 
@@ -8,20 +8,20 @@ class TransceiverTypeView(generic.ObjectView):
     queryset = TransceiverType.objects.all()
 
     def get_extra_context(self, request, instance):
-        related_models = (
+        related_transceiver = (
             (Transceiver.objects.restrict(request.user).filter(transceiver_type=instance), 'transceiver_type_id'),
         )
 
         return {
-            'related_models': related_models,
+            'related_transceiver': related_transceiver,
         }
 
-class TransceiverTypeListView(generic.ObjectView):
+class TransceiverTypeListView(generic.ObjectListView):
     queryset = TransceiverType.objects.annotate(
         instance_count=count_related(Transceiver, 'transceiver_type')
         )
     filterset = filtersets.TransceiverTypeFilterSet
-    filterset_form = forms.TransceiverTypeFilterForm
+    #filterset_form = forms.TransceiverTypeFilterForm
     table = tables.TransceiverTypeTable
 
 class TransceiverTypeEditView(generic.ObjectEditView):
@@ -34,18 +34,19 @@ class TransceiverTypeBulkDeleteView(generic.BulkDeleteView):
 
 class TransceiverTypeBulkEditView(generic.BulkEditView):
     queryset = TransceiverType.objects.all()
-    filterset = filters.TransceiverTypeFilterSet
+    #filterset = filtersets.TransceiverTypeFilterSet
     table = tables.TransceiverTypeTable
     form = forms.TransceiverTypeForm
 
 class TransceiverTypeDeleteView(generic.ObjectDeleteView):
     queryset = TransceiverType.objects.all()
 
+
 # Transceiver
 class TransceiverView(generic.ObjectView):
     queryset = Transceiver.objects.all()
 
-class TransceiverListView(generic.ObjectView):
+class TransceiverListView(generic.ObjectListView):
     queryset = Transceiver.objects.all()
     table = tables.TransceiverTable
 
@@ -59,7 +60,7 @@ class TransceiverBulkDeleteView(generic.BulkDeleteView):
 
 class TransceiverBulkEditView(generic.BulkEditView):
     queryset = Transceiver.objects.all()
-    filterset = filters.TransceiverFilterSet
+    #filterset = filters.TransceiverFilterSet
     table = tables.TransceiverTable
     form = forms.TransceiverForm
 

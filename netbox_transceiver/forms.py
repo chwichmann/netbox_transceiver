@@ -1,5 +1,5 @@
-from netbox.forms import NetBoxModelForm
-from utilities.forms.fields import CommentField, DynamicModelChoiceField
+from netbox.forms import NetBoxModelForm, NetBoxModelFilterSetForm
+from utilities.forms.fields import CommentField, DynamicModelChoiceField, DynamicModelMultipleChoiceField
 from .models import *
 from dcim.models import Manufacturer, Device, Module, Interface
 
@@ -11,15 +11,13 @@ class TransceiverTypeForm(NetBoxModelForm):
 
     fieldsets = (
         ('Transceiver type', ('model', 'manufacturer', 'part_number', 'tags')),
-        ('Specifications', ('physic', 'form', 'profile', 'tx_power_min',
-                           'tx_power_max', 'rx_power_min', 'rx_power_max')),
+        ('Specifications', ('physic', 'form', 'tx_power_min', 'tx_power_max', 'rx_power_min', 'rx_power_max', 'power_budget')),
     )
 
     class Meta:
         model = TransceiverType
         fields = ('model', 'manufacturer', 'part_number', 'comments', 'tags', 
-                  'physic', 'form', 'profile', 'tx_power_min', 'tx_power_max', 
-                  'rx_power_min', 'rx_power_max')
+                  'physic', 'form', 'tx_power_min', 'tx_power_max', 'rx_power_min', 'rx_power_max')
 
 class TransceiverForm(NetBoxModelForm):
     device = DynamicModelChoiceField(
@@ -52,7 +50,20 @@ class TransceiverForm(NetBoxModelForm):
     )
 
     fieldsets = (
-        ('Transceiver', ('device', 'module', 'transceiver_type', 'status', 'description', 'tags')),
+        ('Transceiver', ('device', 'module', 'interface', 'transceiver_type', 'status', 'description', 'tags')),
         ('Hardware', (
             'serial', 'asset_tag' )),
+    )
+
+class TransceiverTypelFilterForm(NetBoxModelFilterSetForm):
+    model = TransceiverType
+
+    fieldsets = (
+        (None, ('q', 'filter_id', 'tag')),
+        ('Hardware', ('manufacturer_id', 'part_number')),
+        ('Specifications', (
+            'physic', 'form', 'rx_power_min', 'rx_power_max', 'tx_power_min',
+            'tx_power_max',
+        )),
+        ('Weight', ('weight', 'weight_unit')),
     )

@@ -24,42 +24,48 @@ class TransceiverTypeFilterSet(NetBoxModelFilterSet):
         model = TransceiverType
         fields = ['id', 'model', 'part_number']
 
+#class TransceiverTypeProfileFilterSet(NetBoxModelFilterSet):
 
-class TransceiverFilterSet(NetBoxModelFilterSet):
-    manufacturer_id = django_filters.ModelMultipleChoiceFilter(
-        field_name='transceiver_type__manufacturer',
-        queryset=Manufacturer.objects.all(),
-        label=_('Manufacturer (ID)'),
-    )
-    manufacturer = django_filters.ModelMultipleChoiceFilter(
-        field_name='transceiver_type__manufacturer__slug',
-        queryset=Manufacturer.objects.all(),
-        to_field_name='slug',
-        label=_('Manufacturer (slug)'),
-    )
-    device_id = django_filters.ModelMultipleChoiceFilter(
-        queryset=Device.objects.all(),
-        label=_('Device (ID)'),
-    )
-    transceiver_type = django_filters.ModelMultipleChoiceFilter(
-        field_name='transceiver_type__model',
-        queryset=TransceiverType.objects.all(),
-        to_field_name='model',
-        label=_('Transceiver type (model)'),
-    )
-    transceiver_type_id = django_filters.ModelMultipleChoiceFilter(
-        queryset=TransceiverType.objects.all(),
-        label=_('Transceiver type (ID)'),
-    )
-    status = django_filters.MultipleChoiceFilter(
-        choices=TransceiverStatusChoices,
-        null_value=None
-    )
-    serial = MultiValueCharFilter(
-        lookup_expr='iexact'
-    )
+#    class Meta:
+#        model = TransceiverTypeProfile
+#        fields = ['id', 'choice']
 
-    class Meta:
-        model = Transceiver
-        fields = ['id', 'status', 'asset_tag']
+
+#class TransceiverFilterSet(NetBoxModelFilterSet):
+#    manufacturer_id = django_filters.ModelMultipleChoiceFilter(
+#        field_name='transceiver_type__manufacturer',
+#        queryset=Manufacturer.objects.all(),
+#        label=_('Manufacturer (ID)'),
+#    )
+#    manufacturer = django_filters.ModelMultipleChoiceFilter(
+#        field_name='transceiver_type__manufacturer__slug',
+#        queryset=Manufacturer.objects.all(),
+#        to_field_name='slug',
+#        label=_('Manufacturer (slug)'),
+#    )
+#    device_id = django_filters.ModelMultipleChoiceFilter(
+#        queryset=Device.objects.all(),
+#        label=_('Device (ID)'),
+#    )
+#    transceiver_type = django_filters.ModelMultipleChoiceFilter(
+#        field_name='transceiver_type__model',
+#        queryset=TransceiverType.objects.all(),
+#        to_field_name='model',
+#        label=_('Transceiver type (model)'),
+#    )
+#    transceiver_type_id = django_filters.ModelMultipleChoiceFilter(
+#        queryset=TransceiverType.objects.all(),
+#        label=_('Transceiver type (ID)'),
+#    )
+#    status = django_filters.MultipleChoiceFilter(
+#        choices=TransceiverStatusChoices,
+#        null_value=None
+#    )
+#    serial = MultiValueCharFilter(
+#        lookup_expr='iexact'
+#    )
+
+#    class Meta:
+#        model = Transceiver
+#        fields = ['id', 'status', 'asset_tag']
 

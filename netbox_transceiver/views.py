@@ -18,15 +18,24 @@ class TransceiverTypeView(generic.ObjectView):
 
 class TransceiverTypeListView(generic.ObjectListView):
     queryset = TransceiverType.objects.annotate(
-        instance_count=count_related(Transceiver, 'transceiver_type')
+        instance_count=count_related(Transceiver, 'transceiver_type'),
         )
     filterset = filtersets.TransceiverTypeFilterSet
     #filterset_form = forms.TransceiverTypeFilterForm
     table = tables.TransceiverTypeTable
 
+
 class TransceiverTypeEditView(generic.ObjectEditView):
     queryset = TransceiverType.objects.all()
     form = forms.TransceiverTypeForm
+
+    #def get_extra_context(self, request, instance):
+    #    profiles = TransceiverTypeProfile.objects.filter(profile=instance)
+
+    #    return {
+    #        'profiles': profiles,
+    #        }
+
 
 class TransceiverTypeBulkDeleteView(generic.BulkDeleteView):
     queryset = TransceiverType.objects.all()
@@ -41,6 +50,32 @@ class TransceiverTypeBulkEditView(generic.BulkEditView):
 class TransceiverTypeDeleteView(generic.ObjectDeleteView):
     queryset = TransceiverType.objects.all()
 
+# TransceiverTypeProfile
+class TransceiverTypeProfileListView(generic.ObjectListView):
+    queryset = TransceiverTypeProfile.objects.annotate(
+        instance_count=count_related(TransceiverType, 'profiles'),
+        )
+    table = tables.TransceiverTypeProfileTable
+
+class TransceiverTypeProfileView(generic.ObjectView):
+    queryset = TransceiverTypeProfile.objects.all()
+
+class TransceiverTypeProfileEditView(generic.ObjectEditView):
+    queryset = TransceiverTypeProfile.objects.all()
+    form = forms.TransceiverTypeProfileForm
+
+class TransceiverTypeProfileBulkDeleteView(generic.BulkDeleteView):
+    queryset = TransceiverTypeProfile.objects.all()
+    table = tables.TransceiverTypeProfileTable
+
+class TransceiverTypeProfileBulkEditView(generic.BulkEditView):
+    queryset = TransceiverTypeProfile.objects.all()
+    #filterset = filters.TransceiverFilterSet
+    table = tables.TransceiverTypeProfileTable
+    form = forms.TransceiverTypeProfileForm
+
+class TransceiverTypeProfileDeleteView(generic.ObjectDeleteView):
+    queryset = Transceiver.objects.all()
 
 # Transceiver
 class TransceiverView(generic.ObjectView):

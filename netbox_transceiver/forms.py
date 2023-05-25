@@ -1,5 +1,5 @@
 from netbox.forms import NetBoxModelForm, NetBoxModelFilterSetForm
-from utilities.forms.fields import CommentField, DynamicModelChoiceField, DynamicModelMultipleChoiceField
+from utilities.forms.fields import CommentField, DynamicModelChoiceField
 from .models import *
 from dcim.models import Manufacturer, Device, Module, Interface
 
@@ -11,49 +11,52 @@ class TransceiverTypeForm(NetBoxModelForm):
 
     fieldsets = (
         ('Transceiver type', ('model', 'manufacturer', 'part_number', 'tags')),
-        ('Specifications', ('physic', 'form', 'tx_power_min', 'tx_power_max', 'rx_power_min', 'rx_power_max', 'power_budget')),
+        ('Specifications', ('physic', 'form', 'profiles', 'tx_power_min', 'tx_power_max',
+                           'rx_power_min', 'rx_power_max', 'power_budget')),
     )
 
     class Meta:
         model = TransceiverType
         fields = ('model', 'manufacturer', 'part_number', 'comments', 'tags', 
-                  'physic', 'form', 'tx_power_min', 'tx_power_max', 'rx_power_min', 'rx_power_max')
+                  'physic', 'form', 'profiles', 'tx_power_min', 'tx_power_max',
+                 'rx_power_min', 'rx_power_max')
+
+class TransceiverTypeProfileForm(NetBoxModelForm):
+
+    fieldsets = (
+        ('Profile', ('profile', 'group')),
+    )
+
+    class Meta:
+        model = TransceiverTypeProfile
+        fields = ('profile', 'group')
 
 class TransceiverForm(NetBoxModelForm):
     device = DynamicModelChoiceField(
         queryset=Device.objects.all(),
         initial_params={
-            'device_id': '$device'
-        }
-    )
-    module = DynamicModelChoiceField(
-        queryset=Module.objects.all(),
-        initial_params={
-            'module_id': '$module'
-        },
-        query_params={
-            'device_id': '$device'
+            'id': '$device'
         }
     )
     interface = DynamicModelChoiceField(
         queryset=Interface.objects.all(),
         initial_params={
-            'interface_id': '$interface'
+            'id': '$interface'
         },
         query_params={
-            'module_id': '$module'
+            'device_id': '$device'
         }
     )
-    transceiver_type = DynamicModelChoiceField(
-        queryset=Transceiver.objects.all(),
-        selector=True
-    )
-
+   
     fieldsets = (
-        ('Transceiver', ('device', 'module', 'interface', 'transceiver_type', 'status', 'description', 'tags')),
+        ('Transceiver', ('device', 'interface', 'transceiver_type', 'profile', 'status', 'description', 'tags')),
         ('Hardware', (
             'serial', 'asset_tag' )),
     )
+
+    class Meta:
+        model = Transceiver
+        fields = ('device', 'interface','transceiver_type', 'profile', 'status', 'description', 'serial', 'asset_tag')
 
 class TransceiverTypelFilterForm(NetBoxModelFilterSetForm):
     model = TransceiverType

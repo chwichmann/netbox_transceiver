@@ -1,8 +1,7 @@
 from rest_framework import serializers
 
 from netbox.api.serializers import NetBoxModelSerializer
-from ..models import TransceiverType, Transceiver
-from .nested_serializers import *
+from ..models import TransceiverType, TransceiverTypeProfile, Transceiver
 
 class TransceiverTypeSerializer(NetBoxModelSerializer):
     url = serializers.HyperlinkedIdentityField(
@@ -15,6 +14,18 @@ class TransceiverTypeSerializer(NetBoxModelSerializer):
             'id', 'url', 'model', 'manufacturer', 'comments', 'tags', 'custom_fields', 'created', 'last_updated',
             )
 
+class TransceiverTypeProfileSerializer(NetBoxModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name='plugins-api:netbox_transceiver-api:transceivertypeprofile-detail'
+    )
+
+    class Meta:
+        model = TransceiverTypeProfile
+        fields = (
+            'id', 'url', 'profile', 'group',
+            )
+
+
 class TransceiverSerializer(NetBoxModelSerializer):
     url = serializers.HyperlinkedIdentityField(
         view_name='plugins-api:netbox_transceiver-api:transceiver-detail'
@@ -23,5 +34,5 @@ class TransceiverSerializer(NetBoxModelSerializer):
     class Meta:
         model = Transceiver
         fields = (
-            'id', 'url', 'device', 'model', 'interface', 'transceiver_type', 'comments', 'tags', 'custom_fields', 'created', 'last_updated',
+            'id', 'url', 'device', 'interface', 'transceiver_type', 'tags', 'custom_fields', 'created', 'last_updated',
             )

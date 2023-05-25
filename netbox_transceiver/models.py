@@ -5,6 +5,29 @@ from netbox.models import NetBoxModel
 
 from .choices import *
 
+class TransceiverTypeProfile(NetBoxModel):
+    profile = models.CharField(
+        max_length=50,
+        unique=True,
+    )
+    group = models.CharField(
+        max_length=50,
+        choices=TransceiverTypeProfileGroupChoices)
+
+    class Meta:
+        ordering = ('group', 'profile')
+        constraints = (
+            models.UniqueConstraint(
+                fields=('group', 'profile'),
+                name='%(app_label)s_%(class)s_unique_group_profile'
+            ),
+        )
+
+    def __str__(self):
+        return self.profile
+
+    def get_absolute_url(self):
+        return reverse('plugins:netbox_transceiver:transceivertypeprofile', args=[self.pk])
 
 class TransceiverType(NetBoxModel):
     """
@@ -69,6 +92,12 @@ class TransceiverType(NetBoxModel):
         null=True,
         verbose_name='Max Rx Power (dBm)'
     )
+    profiles = models.ManyToManyField(
+        to=TransceiverTypeProfile,
+        related_name='profiles',
+        blank=True,
+        verbose_name='Profiles',
+        )
     comments = models.TextField(
         blank=True
         )
@@ -94,9 +123,16 @@ class TransceiverType(NetBoxModel):
     def get_absolute_url(self):
         return reverse('plugins:netbox_transceiver:transceivertype', args=[self.pk])
 
-    def power_budget(self):
+    def power_budget_max(self):
         if self.rx_power_min and self.tx_power_min:
             budget = self.rx_power_min - self.tx_power_min
+            if budget < 0:
+                budget = budget * -1
+            return budget
+
+    def power_budget_min(self):
+        if self.rx_power_max and self.tx_power_max:
+            budget = self.rx_power_max - self.tx_power_max
             if budget < 0:
                 budget = budget * -1
             return budget
@@ -111,11 +147,6 @@ class Transceiver(NetBoxModel):
         on_delete=models.CASCADE,
         related_name='transceivers'
     )
-    module = models.ForeignKey(
-        to='dcim.Module',
-        on_delete=models.CASCADE,
-        related_name='transceivers'
-    )
     interface = models.OneToOneField(
         to='dcim.Interface',
         on_delete=models.CASCADE,
@@ -126,6 +157,11 @@ class Transceiver(NetBoxModel):
         on_delete=models.PROTECT,
         related_name='instances'
     )
+    profile = models.ForeignKey(
+            to=TransceiverTypeProfile,
+            on_delete=models.PROTECT,
+            related_name='transceiver_profile'
+        )
     status = models.CharField(
         max_length=50,
         choices=TransceiverStatusChoices,
@@ -155,10 +191,16 @@ class Transceiver(NetBoxModel):
         verbose_name_plural = 'Transceivers'
 
     def __str__(self):
-        return f'{self.device.name}: {self.interface._name} ({self.pk})'
+        return f'{self.device.name}: {self.interface} ({self.pk})'
+
+    #def save(self, *args, **kwargs):
+    #    is_new = not bool(self.pk)
 
     def get_absolute_url(self):
-        return reverse('plugins:transceiver:transceiver', args=[self.pk])
+        return reverse('plugins:netbox_transceiver:transceiver', args=[self.pk])
 
     def get_status_color(self):
         return TransceiverStatusChoices.colors.get(self.status)
+
+    def name(self):
+        return f'{self.device.name}: {self.interface}'

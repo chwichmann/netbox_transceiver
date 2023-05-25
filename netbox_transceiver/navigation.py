@@ -10,4 +10,9 @@ menu_items = (
         link="plugins:netbox_transceiver:transceivertype_list",
         link_text="Transceiver Types",
     ),
+
+    PluginMenuItem(
+        link="plugins:netbox_transceiver:transceivertypeprofile_list",
+        link_text="Transceiver Profiles",
+    ),
 )

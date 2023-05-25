@@ -1,6 +1,6 @@
 import django_tables2 as tables
 from netbox.tables import NetBoxTable, columns
-from .models import *
+from .models import TransceiverType, Transceiver, TransceiverTypeProfile
 
 class TransceiverTypeTable(NetBoxTable):
     model = tables.Column(
@@ -23,14 +23,31 @@ class TransceiverTypeTable(NetBoxTable):
     class Meta(NetBoxTable.Meta):
         model = TransceiverType
         fields = ('pk', 'id', 'model', 'manufacturer', 'part_number', 'physic', 'form',
-                 'profile', 'tx_power_min', 'tx_power_max', 'rx_power_min', 'rx_power_max')
+                 'profiles', 'tx_power_min', 'tx_power_max', 'rx_power_min', 'rx_power_max')
         default_columns = ('pk', 'model', 'manufacturer', 'part_number', 'physic', 'form')
 
-class TransceiverTable(NetBoxTable):
-    device = tables.Column(
-        linkify=True
+class TransceiverTypeProfileTable(NetBoxTable):
+    profile = tables.Column(
+        linkify=True,
+        )
+    group = tables.Column()
+    instance_count = columns.LinkedCountColumn(
+        viewname='plugins:netbox_transceiver:transceivertype_list',
+        url_params={'profiles_id': 'pk'},
+        verbose_name='Instances'
     )
-    module = tables.Column(
+
+    class Meta(NetBoxTable.Meta):
+        model = TransceiverTypeProfile
+        fields = ('profile', 'group', 'instance_count')
+        default_columns = ('profile', 'group', 'instance_count')
+
+
+class TransceiverTable(NetBoxTable):
+    name = tables.Column(
+        linkify=True,
+    )
+    device = tables.Column(
         linkify=True
     )
     interface = tables.Column(
@@ -44,17 +61,16 @@ class TransceiverTable(NetBoxTable):
         linkify=True
     )
     status = columns.ChoiceFieldColumn()
-    comments = columns.MarkdownColumn()
     tags = columns.TagColumn(
-        #url_name='transceiver:transceiver_list'
+        url_name='plugins:netbox_transceiver:transceiver_list'
     )
 
     class Meta(NetBoxTable.Meta):
         model = Transceiver
         fields = (
-            'pk', 'id', 'device', 'module', 'interface', 'manufacturer', 'transceiver_type', 'status', 'serial', 'asset_tag',
-            'description', 'comments', 'tags',
+            'pk', 'id', 'name', 'device', 'interface', 'manufacturer', 'transceiver_type', 'profile', 'status', 'serial', 'asset_tag',
+            'description', 'tags',
         )
         default_columns = (
-            'pk', 'id', 'device', 'module', 'interface', 'transceiver_type', 'status'
+            'name', 'transceiver_type', 'profile', 'status'
         )

@@ -31,16 +31,21 @@ class TransceiverTypeProfileTable(NetBoxTable):
         linkify=True,
         )
     group = tables.Column()
-    instance_count = columns.LinkedCountColumn(
+    type_count = columns.LinkedCountColumn(
         viewname='plugins:netbox_transceiver:transceivertype_list',
         url_params={'profiles_id': 'pk'},
-        verbose_name='Instances'
+        verbose_name='Types'
+    )
+    transceiver_count = columns.LinkedCountColumn(
+        viewname='plugins:netbox_transceiver:transceiver_list',
+        url_params={'transceiver_id': 'pk'},
+        verbose_name='Transceivers'
     )
 
     class Meta(NetBoxTable.Meta):
         model = TransceiverTypeProfile
-        fields = ('profile', 'group', 'instance_count')
-        default_columns = ('profile', 'group', 'instance_count')
+        fields = ('profile', 'group', 'type_count', 'transceiver_count')
+        default_columns = ('profile', 'group', 'type_count', 'transceiver_count')
 
 
 class TransceiverTable(NetBoxTable):

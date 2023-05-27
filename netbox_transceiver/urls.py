@@ -30,7 +30,6 @@ urlpatterns = (
     # Transceiver
     path('transceiver/', views.TransceiverListView.as_view(), name='transceiver_list'),
     path('transceiver/add/', views.TransceiverEditView.as_view(), name='transceiver_add'),
-    path('transceiver/add/', views.TransceiverEditView.as_view(), name='transceiver_add'),
     path('transceiver/delete/', views.TransceiverBulkDeleteView.as_view(), name='transceiver_bulk_delete'),
     path('transceiver/edit/', views.TransceiverBulkEditView.as_view(), name='transceiver_bulk_edit'),
     path('transceiver/<int:pk>/', views.TransceiverView.as_view(), name='transceiver'),

@@ -5,8 +5,8 @@
 ## Features
 
 * Create Transceiver Types with specifications, part number and asset tag
+* Assign transceiver with status and serial number to an interface
 * Create your format profiles
-* Assign transceiver with serial number on an interface
 
 ## Requirements
 
@@ -53,6 +53,7 @@ Full reference: [Using Plugins - NetBox Documentation](https://docs.netbox.dev/e
 
 ## Contribute
 
+Todo:
 Contributions are always welcome! Please see: [contributing guide](CONTRIBUTING.md)
 
 ## License

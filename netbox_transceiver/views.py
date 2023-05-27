@@ -53,7 +53,8 @@ class TransceiverTypeDeleteView(generic.ObjectDeleteView):
 # TransceiverTypeProfile
 class TransceiverTypeProfileListView(generic.ObjectListView):
     queryset = TransceiverTypeProfile.objects.annotate(
-        instance_count=count_related(TransceiverType, 'profiles'),
+        type_count=count_related(TransceiverType, 'profiles'),
+        transceiver_count=count_related(Transceiver, 'profile'),
         )
     table = tables.TransceiverTypeProfileTable
 

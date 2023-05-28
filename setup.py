@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='netbox_transceiver',
-    version='0.1',
+    version='0.0.1',
     description='Add Transceiver to your network',
     url='https://github.com/chwichmann/netbox_transceiver',
     author='Christian Wichmann',
